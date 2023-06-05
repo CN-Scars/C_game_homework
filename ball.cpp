@@ -10,11 +10,10 @@ void gotoxy(int x,int y)//光标定位函数
 	pos.Y=y;//将光标的目标移动位置传递给结构体
 	SetConsoleCursorPosition(handle,pos);//移动光标
 }
-void ShowCursor(bool visible) {            //显示或隐藏光标
+void ShowCursor(bool visible)
+{            //显示或隐藏光标
     CONSOLE_CURSOR_INFO cursor_info = {20, visible};
-            //CONSOLE_CURSOR_INFO结构体包含控制台光标信息，成员分别表示光标百分比厚度和是否可见
     SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &cursor_info);
-            //SetConsoleCursorInfo设定控制台窗口的光标大小和是否可见
 }
  
 int main(){
@@ -29,17 +28,19 @@ int main(){
 	
 	ShowCursor(false); 
 	
-	int velocity_x=1;
-	int velocity_y=1;
+	int velocity_x=5;
+	int velocity_y=5;
 	
-	while(1){
+	while(1)
+	{
 		x+=velocity_x;
 		y+=velocity_y;
 		
 		system("cls");
 		
 		for(j=0;j<=right;j++) printf("_"); printf("\n");
-		for(i=1;i<bottom;i++){
+		for(i=1;i<bottom;i++)
+		{
 			printf("|");
 			for(j=0;j<right-1;j++) printf(" ");
 			printf("|\n"); 
@@ -55,16 +56,17 @@ int main(){
 		}
 		printf("o");
 		printf("\n");
-		Sleep(50);
+	Sleep(500);
 		 
-		if(x==top+1||x==bottom-1){
+		if( x <= top + 1 || x >= bottom - 1 ){
 			velocity_x=-velocity_x;
 			printf("\a");
 		}
-		if(y==left+1||y==right-1){
+		if(y<=left+1||y>=right-1){
 			velocity_y=-velocity_y;
 			printf("\a");
 		}
+
 	}
 	return 0;
 } 
