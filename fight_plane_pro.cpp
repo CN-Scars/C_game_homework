@@ -37,13 +37,17 @@ void startup() // 数据初始化
 {
 	position_x = High - 1;
 	position_y = Width / 2;
+	
 	canvas[position_x][position_y] = 1;
 	int k;
 	for (k = 0; k < EnemyNum; k++)
 	{
 		enemy_x[k] = rand() % 2;
 		enemy_y[k] = rand() % Width;
-		canvas[enemy_x[k]][enemy_y[k]] = 3;
+		int dy[] = { 0, 1, 0, -1, 0 };
+		int dx[] = { 1, 0, -1, 0, 0 };
+		for (int i = 0; i < 5; i++)
+			canvas[enemy_x[k] + dx[i]][enemy_y[k] + dy[i]] = 3;
 		enemy_health[k] = EnemyHealth;
 	}
 	score = 0;
@@ -91,7 +95,7 @@ void updateWithoutInput()  // 与用户输入无关的更新
 	}
 
 	// 更新玩家子弹位置
-	for (i = 0; i < player_bullet_num; i++)
+	for (int i = 0; i < player_bullet_num; i++)
 	{
 		canvas[player_bullet_x[i]][player_bullet_y[i]] = 0; // 清除之前的位置
 
@@ -102,24 +106,30 @@ void updateWithoutInput()  // 与用户输入无关的更新
 			// 判断子弹是否击中敌机
 			for (k = 0; k < EnemyNum; k++)
 			{
-				if ((player_bullet_x[i] == enemy_x[k]) && (player_bullet_y[i] == enemy_y[k]))
+				int dy[] = { 0, 1, 0, -1, 0 };
+				int dx[] = { 1, 0, -1, 0, 0 };
+				for (int I = 0; I < 5; I++)
 				{
-					canvas[player_bullet_x[i]][player_bullet_y[i]] = 0; // 子弹消失
-					enemy_health[k]--; // 减少敌机血量
-					if (enemy_health[k] <= 0)
+					if ((player_bullet_x[i] == enemy_x[k] + dx[I]) && (player_bullet_y[i] == enemy_y[k] + dy[I]))
 					{
-						score++; // 分数加1
-						if (score % 5 == 0 && EnemyMoveSpeed > 3) // 达到一定积分后，敌机变快
-							EnemyMoveSpeed--;
-						if (score % 5 == 0) // 达到一定积分后，子弹变厉害
-							BulletWidth++;
-						canvas[enemy_x[k]][enemy_y[k]] = 0;
-						enemy_x[k] = rand() % 2; // 产生新的飞机
-						enemy_y[k] = rand() % Width;
-						canvas[enemy_x[k]][enemy_y[k]] = 3;
-						enemy_health[k] = EnemyHealth; // 重置敌机血量
+						canvas[player_bullet_x[i]][player_bullet_y[i]] = 0; // 子弹消失
+						enemy_health[k]--; // 减少敌机血量
+						if (enemy_health[k] <= 0)
+						{
+							score++; // 分数加1
+							if (score % 5 == 0 && EnemyMoveSpeed > 3) // 达到一定积分后，敌机变快
+								EnemyMoveSpeed--;
+							if (score % 5 == 0) // 达到一定积分后，子弹变厉害
+								BulletWidth++;
+							for (j = 0; j < 5; j++)
+								canvas[enemy_x[k] + dx[j]][enemy_y[k] + dy[j]] = 0;
+							enemy_x[k] = rand() % 2; // 产生新的飞机
+							enemy_y[k] = rand() % Width;
+							canvas[enemy_x[k]][enemy_y[k]] = 3;
+							enemy_health[k] = EnemyHealth; // 重置敌机血量
+						}
+						break;
 					}
-					break;
 				}
 			}
 
@@ -175,15 +185,21 @@ void updateWithoutInput()  // 与用户输入无关的更新
 
 	for (k = 0; k < EnemyNum; k++)
 	{
-		if ((position_x == enemy_x[k]) && (position_y == enemy_y[k]))  // 敌机撞到我机
+		int dy[] = { 0, 1, 0, -1, 0 };
+		int dx[] = { 1, 0, -1, 0, 0 };
+		for (int i = 0; i < 5; i++)
 		{
-			printf("失败！\n");
-			Sleep(3000);
-			system("pause");
-			exit(0);
+			if ((position_x == enemy_x[k] + dx[i]) && (position_y == enemy_y[k] + dy[i]))  // 敌机撞到我机
+			{
+				printf("失败！\n");
+				Sleep(3000);
+				system("pause");
+				exit(0);
+			}		
 		}
+		
 
-		if (enemy_x[k] > High)   // 敌机跑出显示屏幕
+		if (enemy_x[k] - 1 > High)   // 敌机跑出显示屏幕
 		{
 			canvas[enemy_x[k]][enemy_y[k]] = 0;
 			enemy_x[k] = rand() % 2;           // 产生新的飞机
@@ -198,10 +214,14 @@ void updateWithoutInput()  // 与用户输入无关的更新
 			// 敌机下落
 			for (k = 0; k < EnemyNum; k++)
 			{
-				canvas[enemy_x[k]][enemy_y[k]] = 0;
+				int dy[] = { 0, 1, 0, -1, 0 };
+				int dx[] = { 1, 0, -1, 0, 0 };
+				for (int i = 0; i < 5; i++)
+					canvas[enemy_x[k] + dx[i]][enemy_y[k] + dy[i]] = 0;
 				enemy_x[k]++;
 				speed = 0;
-				canvas[enemy_x[k]][enemy_y[k]] = 3;
+				for (int i = 0; i < 5; i++)
+					canvas[enemy_x[k] + dx[i]][enemy_y[k] + dy[i]] = 3;
 			}
 		}
 	}
@@ -281,4 +301,3 @@ int main()
 	}
 	return 0;
 }
-
