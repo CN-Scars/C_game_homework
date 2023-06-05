@@ -84,24 +84,6 @@ int main()
 				}
 			}
 		}
-
-		/*
-		// 判断球之间是否碰撞
-		for (i = 0; i < BallNum; i++)
-		{
-			if (minDistances2[i][0] <= 4 * radius * radius) // 最小距离小于阈值，发生碰撞
-			{
-				j = minDistances2[i][1];
-				// 交换速度				
-				int temp;
-				temp = ball_vx[i]; ball_vx[i] = ball_vx[j]; ball_vx[j] = temp;
-				temp = ball_vy[i]; ball_vy[i] = ball_vy[j]; ball_vy[j] = temp;
-
-				minDistances2[j][0] = 999999999; // 避免交换两次速度，又回去了
-				minDistances2[j][1] = -1;
-			}
-		}
-		*/
 		// 判断球之间是否碰撞
 		for (i = 0; i < BallNum; i++)
 		{
