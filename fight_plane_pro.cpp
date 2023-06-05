@@ -210,9 +210,9 @@ void updateWithoutInput()  // 与用户输入无关的更新
 void updateWithInput()  // 与用户输入有关的更新
 {
 	char input;
-	if (kbhit())  // 判断是否有输入
+	if (_kbhit())  // 判断是否有输入
 	{
-		input = getch();  // 根据用户的不同输入来移动，不必输入回车
+		input = _getch();  // 根据用户的不同输入来移动，不必输入回车
 		if (input == 'a' && position_y > 0)
 		{
 			canvas[position_x][position_y] = 0;
