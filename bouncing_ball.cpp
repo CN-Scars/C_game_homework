@@ -1,14 +1,17 @@
 #include <graphics.h>
 #include <conio.h>
 #include <math.h>
+#include <vector>
 #define High 480  // 游戏画面尺寸
 #define Width 640
-#define BallNum 15 // 小球个数
 
 int main()
 {
-	float ball_x[BallNum], ball_y[BallNum]; // 小球的坐标
-	float ball_vx[BallNum], ball_vy[BallNum]; // 小球的速度
+	// 小球的个数现在为变量，而不是常量
+	int BallNum = 15;
+
+	std::vector<float> ball_x(BallNum), ball_y(BallNum); // 小球的坐标
+	std::vector<float> ball_vx(BallNum), ball_vy(BallNum); // 小球的速度
 	float radius;  // 小球的半径
 	int i, j;
 
@@ -27,6 +30,21 @@ int main()
 
 	while (1)
 	{
+		// 监听空格键
+		if (_kbhit())
+		{
+			if (_getch() == ' ')
+			{
+				BallNum++; // 增加球的数量
+
+				// 增加新的球
+				ball_x.push_back(rand() % int(Width - 4 * radius) + 2 * radius);
+				ball_y.push_back(rand() % int(High - 4 * radius) + 2 * radius);
+				ball_vx.push_back((rand() % 2) * 2 - 1);
+				ball_vy.push_back((rand() % 2) * 2 - 1);
+			}
+		}
+
 		// 绘制黑线、黑色填充的圆
 		setcolor(BLACK);
 		setfillcolor(BLACK);
@@ -59,12 +77,7 @@ int main()
 				ball_vy[i] = -ball_vy[i];
 		}
 
-		float minDistances2[BallNum][2]; // 记录某个小球，距离它最近的小球的距离，这个小球的下标
-		for (i = 0; i < BallNum; i++)
-		{
-			minDistances2[i][0] = 9999999;
-			minDistances2[i][1] = -1;
-		}
+		std::vector<std::vector<float>> minDistances2(BallNum, std::vector<float>(2, 9999999));
 
 		// 求解所有小球两两之间的距离平方
 		for (i = 0; i < BallNum; i++)
