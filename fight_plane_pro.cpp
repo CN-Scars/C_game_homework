@@ -47,7 +47,11 @@ void startup() // 数据初始化
 		int dy[] = { 0, 1, 0, -1, 0 };
 		int dx[] = { 1, 0, -1, 0, 0 };
 		for (int i = 0; i < 5; i++)
-			canvas[enemy_x[k] + dx[i]][enemy_y[k] + dy[i]] = 3;
+		{
+			int new_X = enemy_x[k] + dx[i], new_Y = enemy_y[k] + dy[i];
+			if (new_X >= 0 && new_Y >= 0)
+				canvas[new_X][new_Y] = 3;
+		}
 		enemy_health[k] = EnemyHealth;
 	}
 	score = 0;
@@ -110,7 +114,8 @@ void updateWithoutInput()  // 与用户输入无关的更新
 				int dx[] = { 1, 0, -1, 0, 0 };
 				for (int I = 0; I < 5; I++)
 				{
-					if ((player_bullet_x[i] == enemy_x[k] + dx[I]) && (player_bullet_y[i] == enemy_y[k] + dy[I]))
+					int new_X = enemy_x[k] + dx[I], new_Y = enemy_y[k] + dy[I];
+					if ((player_bullet_x[i] == new_X) && (player_bullet_y[i] == new_Y))
 					{
 						canvas[player_bullet_x[i]][player_bullet_y[i]] = 0; // 子弹消失
 						enemy_health[k]--; // 减少敌机血量
@@ -122,7 +127,11 @@ void updateWithoutInput()  // 与用户输入无关的更新
 							if (score % 5 == 0) // 达到一定积分后，子弹变厉害
 								BulletWidth++;
 							for (j = 0; j < 5; j++)
-								canvas[enemy_x[k] + dx[j]][enemy_y[k] + dy[j]] = 0;
+							{
+								new_X = enemy_x[k] + dx[j], new_Y = enemy_y[k] + dy[j];
+								if (new_X >= 0 && new_Y >= 0)
+									canvas[new_X][new_Y] = 0;
+							}
 							enemy_x[k] = rand() % 2; // 产生新的飞机
 							enemy_y[k] = rand() % Width;
 							canvas[enemy_x[k]][enemy_y[k]] = 3;
@@ -189,7 +198,8 @@ void updateWithoutInput()  // 与用户输入无关的更新
 		int dx[] = { 1, 0, -1, 0, 0 };
 		for (int i = 0; i < 5; i++)
 		{
-			if ((position_x == enemy_x[k] + dx[i]) && (position_y == enemy_y[k] + dy[i]))  // 敌机撞到我机
+			int new_X = enemy_x[k] + dx[i], new_Y = enemy_y[k] + dy[i];
+			if ((position_x == new_X) && (position_y == new_Y))  // 敌机撞到我机
 			{
 				printf("失败！\n");
 				Sleep(3000);
@@ -217,11 +227,19 @@ void updateWithoutInput()  // 与用户输入无关的更新
 				int dy[] = { 0, 1, 0, -1, 0 };
 				int dx[] = { 1, 0, -1, 0, 0 };
 				for (int i = 0; i < 5; i++)
-					canvas[enemy_x[k] + dx[i]][enemy_y[k] + dy[i]] = 0;
+				{
+					int new_X = enemy_x[k] + dx[i], new_Y = enemy_y[k] + dy[i];
+					if (new_X >= 0 && new_Y >= 0)
+						canvas[new_X][new_Y] = 0;
+				}
 				enemy_x[k]++;
 				speed = 0;
 				for (int i = 0; i < 5; i++)
-					canvas[enemy_x[k] + dx[i]][enemy_y[k] + dy[i]] = 3;
+				{
+					int new_X = enemy_x[k] + dx[i], new_Y = enemy_y[k] + dy[i];
+					if (new_X >= 0 && new_Y >= 0)
+						canvas[enemy_x[k] + dx[i]][enemy_y[k] + dy[i]] = 3;
+				}
 			}
 		}
 	}
@@ -301,4 +319,3 @@ int main()
 	}
 	return 0;
 }
-
