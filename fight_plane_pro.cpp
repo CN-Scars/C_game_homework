@@ -4,27 +4,27 @@
 #include <conio.h>
 #include <windows.h>
 
-#define High 15  // æ¸¸æˆç”»é¢å°ºå¯¸
+#define High 15  // ÓÎÏ·»­Ãæ³ß´ç
 #define Width 25
-#define EnemyNum 5 // æ•Œæœºä¸ªæ•°
-#define MaxBulletNum 50 // æœ€å¤§å­å¼¹æ•°é‡
-#define EnemyHealth 2	// æ•Œæœºè¡€é‡ 
+#define EnemyNum 5 // µĞ»ú¸öÊı
+#define MaxBulletNum 50 // ×î´ó×Óµ¯ÊıÁ¿
+#define EnemyHealth 2	// µĞ»úÑªÁ¿ 
 
-// å…¨å±€å˜é‡
-int position_x, position_y; // é£æœºä½ç½®
-int enemy_x[EnemyNum], enemy_y[EnemyNum];  // æ•Œæœºä½ç½®
-int enemy_health[EnemyNum]; // æ•Œæœºè¡€é‡
-int player_bullet_x[MaxBulletNum], player_bullet_y[MaxBulletNum]; // ç©å®¶å­å¼¹ä½ç½®
-int player_bullet_num = 0; // ç©å®¶å­å¼¹æ•°é‡
-int enemy_bullet_x[MaxBulletNum], enemy_bullet_y[MaxBulletNum]; // æ•Œæœºå­å¼¹ä½ç½®
-int enemy_bullet_num = 0; // æ•Œæœºå­å¼¹æ•°é‡
-int canvas[High][Width] = { 0 }; // äºŒç»´æ•°ç»„å­˜å‚¨æ¸¸æˆç”»å¸ƒä¸­å¯¹åº”çš„å…ƒç´ 
-// 0ä¸ºç©ºæ ¼ï¼Œ1ä¸ºé£æœº*ï¼Œ2ä¸ºå­å¼¹|ï¼Œ3ä¸ºæ•Œæœº@
-int score; // å¾—åˆ†
-int BulletWidth; // å­å¼¹å®½åº¦
-int EnemyMoveSpeed; // æ•Œæœºç§»åŠ¨é€Ÿåº¦
+// È«¾Ö±äÁ¿
+int position_x, position_y; // ·É»úÎ»ÖÃ
+int enemy_x[EnemyNum], enemy_y[EnemyNum];  // µĞ»úÎ»ÖÃ
+int enemy_health[EnemyNum]; // µĞ»úÑªÁ¿
+int player_bullet_x[MaxBulletNum], player_bullet_y[MaxBulletNum]; // Íæ¼Ò×Óµ¯Î»ÖÃ
+int player_bullet_num = 0; // Íæ¼Ò×Óµ¯ÊıÁ¿
+int enemy_bullet_x[MaxBulletNum], enemy_bullet_y[MaxBulletNum]; // µĞ»ú×Óµ¯Î»ÖÃ
+int enemy_bullet_num = 0; // µĞ»ú×Óµ¯ÊıÁ¿
+int canvas[High][Width] = { 0 }; // ¶şÎ¬Êı×é´æ´¢ÓÎÏ·»­²¼ÖĞ¶ÔÓ¦µÄÔªËØ
+// 0Îª¿Õ¸ñ£¬1Îª·É»ú*£¬2Îª×Óµ¯|£¬3ÎªµĞ»ú@
+int score; // µÃ·Ö
+int BulletWidth; // ×Óµ¯¿í¶È
+int EnemyMoveSpeed; // µĞ»úÒÆ¶¯ËÙ¶È
 
-void gotoxy(int x, int y)  //å…‰æ ‡ç§»åŠ¨åˆ°(x,y)ä½ç½®
+void gotoxy(int x, int y)  //¹â±êÒÆ¶¯µ½(x,y)Î»ÖÃ
 {
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD pos;
@@ -33,7 +33,7 @@ void gotoxy(int x, int y)  //å…‰æ ‡ç§»åŠ¨åˆ°(x,y)ä½ç½®
 	SetConsoleCursorPosition(handle, pos);
 }
 
-void startup() // æ•°æ®åˆå§‹åŒ–
+void startup() // Êı¾İ³õÊ¼»¯
 {
 	position_x = High - 1;
 	position_y = Width / 2;
@@ -55,55 +55,55 @@ void startup() // æ•°æ®åˆå§‹åŒ–
 	EnemyMoveSpeed = 20;
 }
 
-void show()  // æ˜¾ç¤ºç”»é¢
+void show()  // ÏÔÊ¾»­Ãæ
 {
-	gotoxy(0, 0);  // å…‰æ ‡ç§»åŠ¨åˆ°åŸç‚¹ä½ç½®ï¼Œä»¥ä¸‹é‡ç”»æ¸…å±
+	gotoxy(0, 0);  // ¹â±êÒÆ¶¯µ½Ô­µãÎ»ÖÃ£¬ÒÔÏÂÖØ»­ÇåÆÁ
 	int i, j;
 	for (i = 0; i < High; i++)
 	{
 		for (j = 0; j < Width; j++)
 		{
 			if (canvas[i][j] == 0)
-				printf(" ");   //   è¾“å‡ºç©ºæ ¼
+				printf(" ");   //   Êä³ö¿Õ¸ñ
 			else if (canvas[i][j] == 1)
-				printf("*");   //   è¾“å‡ºé£æœº*
+				printf("*");   //   Êä³ö·É»ú*
 			else if (canvas[i][j] == 2)
-				printf("|");   //   è¾“å‡ºå­å¼¹|
+				printf("|");   //   Êä³ö×Óµ¯|
 			else if (canvas[i][j] == 3)
-				printf("@");   //  è¾“å‡ºé£æœº@
+				printf("@");   //  Êä³ö·É»ú@
 		}
 		printf("\n");
 	}
-	printf("å¾—åˆ†ï¼š%d\n", score);
+	printf("µÃ·Ö£º%d\n", score);
 	Sleep(20);
 }
 
-void updateWithoutInput()  // ä¸ç”¨æˆ·è¾“å…¥æ— å…³çš„æ›´æ–°
+void updateWithoutInput()  // ÓëÓÃ»§ÊäÈëÎŞ¹ØµÄ¸üĞÂ
 {
 	int i, j, k;
 
-	// æ•Œæœºå‘å°„å­å¼¹
+	// µĞ»ú·¢Éä×Óµ¯
 	for (k = 0; k < EnemyNum; k++)
 	{
-		int shoot = rand() % 75; // éšæœºå†³å®šæ˜¯å¦å‘å°„å­å¼¹
+		int shoot = rand() % 75; // Ëæ»ú¾ö¶¨ÊÇ·ñ·¢Éä×Óµ¯
 		if (shoot == 0 && enemy_bullet_num < MaxBulletNum)
 		{
-			enemy_bullet_x[enemy_bullet_num] = enemy_x[k] + 1; // å­å¼¹åˆå§‹ä½ç½®åœ¨æ•Œæœºçš„æ­£ä¸‹æ–¹
+			enemy_bullet_x[enemy_bullet_num] = enemy_x[k] + 1; // ×Óµ¯³õÊ¼Î»ÖÃÔÚµĞ»úµÄÕıÏÂ·½
 			enemy_bullet_y[enemy_bullet_num] = enemy_y[k];
 			enemy_bullet_num++;
 		}
 	}
 
-	// æ›´æ–°ç©å®¶å­å¼¹ä½ç½®
+	// ¸üĞÂÍæ¼Ò×Óµ¯Î»ÖÃ
 	for (int i = 0; i < player_bullet_num; i++)
 	{
-		canvas[player_bullet_x[i]][player_bullet_y[i]] = 0; // æ¸…é™¤ä¹‹å‰çš„ä½ç½®
+		canvas[player_bullet_x[i]][player_bullet_y[i]] = 0; // Çå³ıÖ®Ç°µÄÎ»ÖÃ
 
-		// å­å¼¹å‘ä¸Šç§»åŠ¨
+		// ×Óµ¯ÏòÉÏÒÆ¶¯
 		player_bullet_x[i]--;
 		if (player_bullet_x[i] >= 0)
 		{
-			// åˆ¤æ–­å­å¼¹æ˜¯å¦å‡»ä¸­æ•Œæœº
+			// ÅĞ¶Ï×Óµ¯ÊÇ·ñ»÷ÖĞµĞ»ú
 			for (k = 0; k < EnemyNum; k++)
 			{
 				int dy[] = { 0, 1, 0, -1, 0 };
@@ -112,32 +112,32 @@ void updateWithoutInput()  // ä¸ç”¨æˆ·è¾“å…¥æ— å…³çš„æ›´æ–°
 				{
 					if ((player_bullet_x[i] == enemy_x[k] + dx[I]) && (player_bullet_y[i] == enemy_y[k] + dy[I]))
 					{
-						canvas[player_bullet_x[i]][player_bullet_y[i]] = 0; // å­å¼¹æ¶ˆå¤±
-						enemy_health[k]--; // å‡å°‘æ•Œæœºè¡€é‡
+						canvas[player_bullet_x[i]][player_bullet_y[i]] = 0; // ×Óµ¯ÏûÊ§
+						enemy_health[k]--; // ¼õÉÙµĞ»úÑªÁ¿
 						if (enemy_health[k] <= 0)
 						{
-							score++; // åˆ†æ•°åŠ 1
-							if (score % 5 == 0 && EnemyMoveSpeed > 3) // è¾¾åˆ°ä¸€å®šç§¯åˆ†åï¼Œæ•Œæœºå˜å¿«
+							score++; // ·ÖÊı¼Ó1
+							if (score % 5 == 0 && EnemyMoveSpeed > 3) // ´ïµ½Ò»¶¨»ı·Öºó£¬µĞ»ú±ä¿ì
 								EnemyMoveSpeed--;
-							if (score % 5 == 0) // è¾¾åˆ°ä¸€å®šç§¯åˆ†åï¼Œå­å¼¹å˜å‰å®³
+							if (score % 5 == 0) // ´ïµ½Ò»¶¨»ı·Öºó£¬×Óµ¯±äÀ÷º¦
 								BulletWidth++;
 							for (j = 0; j < 5; j++)
 								canvas[enemy_x[k] + dx[j]][enemy_y[k] + dy[j]] = 0;
-							enemy_x[k] = rand() % 2; // äº§ç”Ÿæ–°çš„é£æœº
+							enemy_x[k] = rand() % 2; // ²úÉúĞÂµÄ·É»ú
 							enemy_y[k] = rand() % Width;
 							canvas[enemy_x[k]][enemy_y[k]] = 3;
-							enemy_health[k] = EnemyHealth; // é‡ç½®æ•Œæœºè¡€é‡
+							enemy_health[k] = EnemyHealth; // ÖØÖÃµĞ»úÑªÁ¿
 						}
 						break;
 					}
 				}
 			}
 
-			canvas[player_bullet_x[i]][player_bullet_y[i]] = 2; // æ›´æ–°æ–°çš„ä½ç½®
+			canvas[player_bullet_x[i]][player_bullet_y[i]] = 2; // ¸üĞÂĞÂµÄÎ»ÖÃ
 		}
 		else
 		{
-			// å­å¼¹è¶…å‡ºè¾¹ç•Œï¼Œç§»é™¤å­å¼¹
+			// ×Óµ¯³¬³ö±ß½ç£¬ÒÆ³ı×Óµ¯
 			for (j = i; j < player_bullet_num - 1; j++)
 			{
 				player_bullet_x[j] = player_bullet_x[j + 1];
@@ -147,29 +147,29 @@ void updateWithoutInput()  // ä¸ç”¨æˆ·è¾“å…¥æ— å…³çš„æ›´æ–°
 		}
 	}
 
-	// æ›´æ–°æ•Œæœºå­å¼¹ä½ç½®
+	// ¸üĞÂµĞ»ú×Óµ¯Î»ÖÃ
 	for (i = 0; i < enemy_bullet_num; i++)
 	{
-		canvas[enemy_bullet_x[i]][enemy_bullet_y[i]] = 0; // æ¸…é™¤ä¹‹å‰çš„ä½ç½®
+		canvas[enemy_bullet_x[i]][enemy_bullet_y[i]] = 0; // Çå³ıÖ®Ç°µÄÎ»ÖÃ
 
-		// å­å¼¹å‘ä¸‹ç§»åŠ¨
+		// ×Óµ¯ÏòÏÂÒÆ¶¯
 		enemy_bullet_x[i]++;
 		if (enemy_bullet_x[i] < High)
 		{
-			// åˆ¤æ–­å­å¼¹æ˜¯å¦å‡»ä¸­ç©å®¶
+			// ÅĞ¶Ï×Óµ¯ÊÇ·ñ»÷ÖĞÍæ¼Ò
 			if ((enemy_bullet_x[i] == position_x) && (enemy_bullet_y[i] == position_y))
 			{
-				printf("å¤±è´¥ï¼\n");
+				printf("Ê§°Ü£¡\n");
 				Sleep(3000);
 				system("pause");
 				exit(0);
 			}
 
-			canvas[enemy_bullet_x[i]][enemy_bullet_y[i]] = 2; // æ›´æ–°æ–°çš„ä½ç½®
+			canvas[enemy_bullet_x[i]][enemy_bullet_y[i]] = 2; // ¸üĞÂĞÂµÄÎ»ÖÃ
 		}
 		else
 		{
-			// å­å¼¹è¶…å‡ºè¾¹ç•Œï¼Œç§»é™¤å­å¼¹
+			// ×Óµ¯³¬³ö±ß½ç£¬ÒÆ³ı×Óµ¯
 			for (j = i; j < enemy_bullet_num - 1; j++)
 			{
 				enemy_bullet_x[j] = enemy_bullet_x[j + 1];
@@ -189,9 +189,9 @@ void updateWithoutInput()  // ä¸ç”¨æˆ·è¾“å…¥æ— å…³çš„æ›´æ–°
 		int dx[] = { 1, 0, -1, 0, 0 };
 		for (int i = 0; i < 5; i++)
 		{
-			if ((position_x == enemy_x[k] + dx[i]) && (position_y == enemy_y[k] + dy[i]))  // æ•Œæœºæ’åˆ°æˆ‘æœº
+			if ((position_x == enemy_x[k] + dx[i]) && (position_y == enemy_y[k] + dy[i]))  // µĞ»ú×²µ½ÎÒ»ú
 			{
-				printf("å¤±è´¥ï¼\n");
+				printf("Ê§°Ü£¡\n");
 				Sleep(3000);
 				system("pause");
 				exit(0);
@@ -199,19 +199,19 @@ void updateWithoutInput()  // ä¸ç”¨æˆ·è¾“å…¥æ— å…³çš„æ›´æ–°
 		}
 		
 
-		if (enemy_x[k] - 1 > High)   // æ•Œæœºè·‘å‡ºæ˜¾ç¤ºå±å¹•
+		if (enemy_x[k] - 1 > High)   // µĞ»úÅÜ³öÏÔÊ¾ÆÁÄ»
 		{
 			canvas[enemy_x[k]][enemy_y[k]] = 0;
-			enemy_x[k] = rand() % 2;           // äº§ç”Ÿæ–°çš„é£æœº
+			enemy_x[k] = rand() % 2;           // ²úÉúĞÂµÄ·É»ú
 			enemy_y[k] = rand() % Width;
 			canvas[enemy_x[k]][enemy_y[k]] = 3;
-			score--;  // å‡åˆ†
-			enemy_health[k] = EnemyHealth;    // é‡ç½®æ•Œæœºè¡€é‡
+			score--;  // ¼õ·Ö
+			enemy_health[k] = EnemyHealth;    // ÖØÖÃµĞ»úÑªÁ¿
 		}
 
 		if (speed == EnemyMoveSpeed)
 		{
-			// æ•Œæœºä¸‹è½
+			// µĞ»úÏÂÂä
 			for (k = 0; k < EnemyNum; k++)
 			{
 				int dy[] = { 0, 1, 0, -1, 0 };
@@ -227,37 +227,37 @@ void updateWithoutInput()  // ä¸ç”¨æˆ·è¾“å…¥æ— å…³çš„æ›´æ–°
 	}
 }
 
-void updateWithInput()  // ä¸ç”¨æˆ·è¾“å…¥æœ‰å…³çš„æ›´æ–°
+void updateWithInput()  // ÓëÓÃ»§ÊäÈëÓĞ¹ØµÄ¸üĞÂ
 {
 	char input;
-	if (_kbhit())  // åˆ¤æ–­æ˜¯å¦æœ‰è¾“å…¥
+	if (_kbhit())  // ÅĞ¶ÏÊÇ·ñÓĞÊäÈë
 	{
-		input = _getch();  // æ ¹æ®ç”¨æˆ·çš„ä¸åŒè¾“å…¥æ¥ç§»åŠ¨ï¼Œä¸å¿…è¾“å…¥å›è½¦
+		input = _getch();  // ¸ù¾İÓÃ»§µÄ²»Í¬ÊäÈëÀ´ÒÆ¶¯£¬²»±ØÊäÈë»Ø³µ
 		if (input == 'a' && position_y > 0)
 		{
 			canvas[position_x][position_y] = 0;
-			position_y--;  // ä½ç½®å·¦ç§»
+			position_y--;  // Î»ÖÃ×óÒÆ
 			canvas[position_x][position_y] = 1;
 		}
 		else if (input == 'd' && position_y < Width - 1)
 		{
 			canvas[position_x][position_y] = 0;
-			position_y++;  // ä½ç½®å³ç§»
+			position_y++;  // Î»ÖÃÓÒÒÆ
 			canvas[position_x][position_y] = 1;
 		}
-		else if (input == 'w')
+		else if (input == 'w' && position_x > 0)
 		{
 			canvas[position_x][position_y] = 0;
-			position_x--;  // ä½ç½®ä¸Šç§»
+			position_x--;  // Î»ÖÃÉÏÒÆ
 			canvas[position_x][position_y] = 1;
 		}
-		else if (input == 's')
+		else if (input == 's' && position_x < High - 1)
 		{
 			canvas[position_x][position_y] = 0;
-			position_x++;  // ä½ç½®ä¸‹ç§»
+			position_x++;  // Î»ÖÃÏÂÒÆ
 			canvas[position_x][position_y] = 1;
 		}
-		else if (input == ' ')  // å‘å°„å­å¼¹
+		else if (input == ' ')  // ·¢Éä×Óµ¯
 		{
 			int left = position_y - BulletWidth;
 			int right = position_y + BulletWidth;
@@ -266,9 +266,9 @@ void updateWithInput()  // ä¸ç”¨æˆ·è¾“å…¥æœ‰å…³çš„æ›´æ–°
 			if (right > Width - 1)
 				right = Width - 1;
 			int k;
-			for (k = left; k <= right; k++) // å‘å°„é—ªå¼¹
+			for (k = left; k <= right; k++) // ·¢ÉäÉÁµ¯
 			{
-				// åˆ¤æ–­æ˜¯å¦ä¸ç©å®¶å­å¼¹é‡å 
+				// ÅĞ¶ÏÊÇ·ñÓëÍæ¼Ò×Óµ¯ÖØµş
 				int overlap = 0;
 				for (int i = 0; i < player_bullet_num; i++)
 				{
@@ -280,7 +280,7 @@ void updateWithInput()  // ä¸ç”¨æˆ·è¾“å…¥æœ‰å…³çš„æ›´æ–°
 				}
 				if (!overlap)
 				{
-					canvas[position_x - 1][k] = 2; // å‘å°„å­å¼¹çš„åˆå§‹ä½ç½®åœ¨é£æœºçš„æ­£ä¸Šæ–¹
+					canvas[position_x - 1][k] = 2; // ·¢Éä×Óµ¯µÄ³õÊ¼Î»ÖÃÔÚ·É»úµÄÕıÉÏ·½
 					player_bullet_x[player_bullet_num] = position_x - 1;
 					player_bullet_y[player_bullet_num] = k;
 					player_bullet_num++;
@@ -292,12 +292,14 @@ void updateWithInput()  // ä¸ç”¨æˆ·è¾“å…¥æœ‰å…³çš„æ›´æ–°
 
 int main()
 {
-	startup();  // æ•°æ®åˆå§‹åŒ–
-	while (1) //  æ¸¸æˆå¾ªç¯æ‰§è¡Œ
+	startup();  // Êı¾İ³õÊ¼»¯
+	while (1) //  ÓÎÏ·Ñ­»·Ö´ĞĞ
 	{
-		show();  // æ˜¾ç¤ºç”»é¢
-		updateWithoutInput();  // ä¸ç”¨æˆ·è¾“å…¥æ— å…³çš„æ›´æ–°
-		updateWithInput();  // ä¸ç”¨æˆ·è¾“å…¥æœ‰å…³çš„æ›´æ–°
+		show();  // ÏÔÊ¾»­Ãæ
+		updateWithoutInput();  // ÓëÓÃ»§ÊäÈëÎŞ¹ØµÄ¸üĞÂ
+		updateWithInput();  // ÓëÓÃ»§ÊäÈëÓĞ¹ØµÄ¸üĞÂ
 	}
 	return 0;
 }
+
+ 
