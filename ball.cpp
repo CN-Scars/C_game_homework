@@ -56,7 +56,12 @@ int main() {
 		}
 		printf("o");
 		printf("\n");
-		Sleep(500);
+		
+//		Sleep(500);
+		for (int i = 0; i < 114514; i++)
+		{
+			
+		}
 
 		if (x <= top + 1 || x >= bottom - 1) {
 			velocity_x = -velocity_x;
