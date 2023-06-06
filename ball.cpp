@@ -28,8 +28,8 @@ int main() {
 
 	ShowCursor(false);
 
-	int velocity_x = 5;
-	int velocity_y = 5;
+	int velocity_x = 1;
+	int velocity_y = 1;
 
 	while (true)
 	{
